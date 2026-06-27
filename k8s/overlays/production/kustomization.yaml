@@ -5,3 +5,11 @@ namespace: ai-gatekeeper-production
 
 resources:
   - ../../base
+  - web-pdb.yaml
+  - proxy-pdb.yaml
+
+replicas:
+  - name: web
+    count: 2
+  - name: proxy
+    count: 2
