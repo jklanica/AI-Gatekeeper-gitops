@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: database-migrator
+spec:
+  completions: 1
+  backoffLimit: 4
+  template:
+    metadata:
+      labels:
+        app: migrator
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: migrator
+          image: jklanica/ai-gatekeeper-migrator:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: ai-gatekeeper-secret
+                  key: DATABASE_URL
