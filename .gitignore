@@ -21,6 +21,8 @@ Thumbs.db
 .env
 .env.local
 *.secret.yaml
+key.txt
+*.key
 
 # Kustomize Helm Charts
 **/charts/
