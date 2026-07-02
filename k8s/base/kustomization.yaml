@@ -10,6 +10,7 @@ resources:
   - proxy
   - web
   - ingress
+  - network-policies
 
 helmCharts:
   - name: ingress-nginx

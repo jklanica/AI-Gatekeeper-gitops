@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - default-deny.yaml
+  - dns-allow.yaml
+  - ingress-allow.yaml
+  - web-networkpolicy.yaml
+  - proxy-networkpolicy.yaml
+  - postgres-networkpolicy.yaml
+  - redis-networkpolicy.yaml
