@@ -12,8 +12,19 @@ spec:
       labels:
         app: proxy
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
       containers:
         - name: proxy
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
           image: jklanica/ai-gatekeeper-proxy:latest
           imagePullPolicy: Always
           ports:
@@ -58,3 +69,9 @@ spec:
                 secretKeyRef:
                   name: ai-gatekeeper-secret
                   key: DATABASE_URL
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}

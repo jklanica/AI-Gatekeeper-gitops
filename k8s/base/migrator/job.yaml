@@ -11,8 +11,19 @@ spec:
         app: migrator
     spec:
       restartPolicy: OnFailure
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
       containers:
         - name: migrator
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
           image: jklanica/ai-gatekeeper-migrator:latest
           imagePullPolicy: IfNotPresent
           env:
@@ -21,3 +32,9 @@ spec:
                 secretKeyRef:
                   name: ai-gatekeeper-secret
                   key: DATABASE_URL
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}

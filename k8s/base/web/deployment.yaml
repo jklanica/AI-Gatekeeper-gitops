@@ -12,8 +12,19 @@ spec:
       labels:
         app: web
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
       containers:
         - name: web
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
           image: jklanica/ai-gatekeeper-web:latest
           imagePullPolicy: IfNotPresent
           ports:
@@ -62,3 +73,13 @@ spec:
               value: "http://proxy-service:3001/v1"
             - name: EXTERNAL_PROXY_URL
               value: "http://localhost/v1"
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: next-cache
+              mountPath: /app/apps/web/.next
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: next-cache
+          emptyDir: {}
