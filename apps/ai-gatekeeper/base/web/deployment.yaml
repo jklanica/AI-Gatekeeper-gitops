@@ -77,7 +77,7 @@ spec:
             - name: tmp
               mountPath: /tmp
             - name: next-cache
-              mountPath: /app/apps/web/.next
+              mountPath: /app/apps/web/.next/cache
       volumes:
         - name: tmp
           emptyDir: {}

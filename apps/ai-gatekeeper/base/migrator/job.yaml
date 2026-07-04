@@ -32,6 +32,10 @@ spec:
                 secretKeyRef:
                   name: ai-gatekeeper-secret
                   key: DATABASE_URL
+            - name: PNPM_HOME
+              value: /tmp/pnpm
+            - name: XDG_DATA_HOME
+              value: /tmp/data
           volumeMounts:
             - name: tmp
               mountPath: /tmp
