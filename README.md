@@ -40,6 +40,8 @@ You can deploy the entire production stack manually:
 ```bash
 kustomize build --enable-helm clusters/production | kubectl apply -f -
 ```
+> **Note:** The first time you run this command on a fresh cluster, you will likely see errors about `resource mapping not found` for Custom Resources like `Application` or `ClusterIssuer`. This is normal! It just means Kubernetes tried to create those resources before the ArgoCD and Cert-Manager controllers finished booting up. **Simply wait 30 seconds and run the exact same command a second time**, and everything will succeed.
+
 *(Alternatively, you can deploy the ArgoCD Root Application in `clusters/production/root-application.yaml` to let ArgoCD take over).*
 
 ### 3. 🌐 Local Domain Mapping
