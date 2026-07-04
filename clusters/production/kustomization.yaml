@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - ../../infrastructure/controllers/ingress-nginx/base
   - ../../infrastructure/security/cert-manager/base
+  - ../../infrastructure/security/sealed-secrets/base
   - ../../infrastructure/controllers/argocd/base
   - ../../apps/ai-gatekeeper/overlays/production
   - root-application.yaml

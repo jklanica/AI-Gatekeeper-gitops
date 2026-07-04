@@ -26,3 +26,4 @@ key.txt
 
 # Kustomize Helm Charts
 **/charts/
+master-key.backup.yaml
