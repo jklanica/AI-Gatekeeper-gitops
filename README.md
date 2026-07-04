@@ -24,7 +24,7 @@ Before deploying, you must generate your own encrypted secrets:
 2. Open `my-secret.yaml` and fill in your actual passwords.
 3. Install the Sealed Secrets controller into your cluster (so you can get the public key):
    ```bash
-   kubectl apply -k infrastructure/security/sealed-secrets/base --enable-helm
+   kustomize build --enable-helm infrastructure/security/sealed-secrets/base | kubectl apply -f -
    ```
 4. Encrypt your secret using the `kubeseal` CLI tool:
    ```bash
@@ -38,7 +38,7 @@ Before deploying, you must generate your own encrypted secrets:
 ### 2. 🚀 Deploy the Cluster
 You can deploy the entire production stack manually:
 ```bash
-kubectl apply -k clusters/production --enable-helm
+kustomize build --enable-helm clusters/production | kubectl apply -f -
 ```
 *(Alternatively, you can deploy the ArgoCD Root Application in `clusters/production/root-application.yaml` to let ArgoCD take over).*
 
