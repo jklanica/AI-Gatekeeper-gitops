@@ -1,8 +1,9 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: postgres
 spec:
+  serviceName: postgres-service
   replicas: 1
   selector:
     matchLabels:
@@ -72,8 +73,13 @@ spec:
             - name: run-postgresql
               mountPath: /var/run/postgresql
       volumes:
-        - name: postgres-data
-          persistentVolumeClaim:
-            claimName: postgres-pvc
         - name: run-postgresql
           emptyDir: {}
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 1Gi
