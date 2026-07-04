@@ -12,3 +12,4 @@ helmCharts:
     version: 2.5.19
     releaseName: sealed-secrets
     namespace: sealed-secrets
+    includeCRDs: true
