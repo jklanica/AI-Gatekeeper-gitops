@@ -3,4 +3,5 @@ kind: Kustomization
 
 resources:
   - ../../infrastructure/controllers/ingress-nginx/base
+  - ../../infrastructure/security/cert-manager/base
   - ../../apps/ai-gatekeeper/overlays/production

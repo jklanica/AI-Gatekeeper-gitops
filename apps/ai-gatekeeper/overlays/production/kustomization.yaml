@@ -5,8 +5,11 @@ namespace: ai-gatekeeper-production
 
 resources:
   - ../../base
-  - web-pdb.yaml
   - proxy-pdb.yaml
+  - web-pdb.yaml
+
+patchesStrategicMerge:
+  - ingress-tls-patch.yaml
 
 replicas:
   - name: web
