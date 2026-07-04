@@ -38,13 +38,13 @@ spec:
               memory: 512Mi
           livenessProbe:
             httpGet:
-              path: /
+              path: /api/health
               port: 3000
             initialDelaySeconds: 15
             periodSeconds: 10
           readinessProbe:
             httpGet:
-              path: /
+              path: /api/health
               port: 3000
             initialDelaySeconds: 5
             periodSeconds: 10
