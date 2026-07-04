@@ -38,10 +38,10 @@ Now that the secrets controller is running with the correct master key, you can 
 ```bash
 kustomize build --enable-helm clusters/production | kubectl apply -f -
 ```
-> **Note:** The first time you run this command on a fresh cluster, you will likely see errors about `resource mapping not found` for Custom Resources like `Application` or `ClusterIssuer`. This is normal! It just means Kubernetes tried to create those resources before the ArgoCD and Cert-Manager controllers finished booting up. **Simply wait 30 seconds and run the exact same command a second time**, and everything will succeed.
-
-*(Alternatively, you can deploy the ArgoCD Root Application in `clusters/production/root-application.yaml` to let ArgoCD take over).*
-
+*(Alternatively, you can deploy the ArgoCD Root Application to let ArgoCD take over syncing the cluster):*
+```bash
+kubectl apply -f clusters/production/root-application.yaml
+```
 ### 3. 🌐 Local Domain Mapping
 Our ingress controller listens for `local.ai-gatekeeper.com`. To access the application locally, map this domain to your localhost.
 
