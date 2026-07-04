@@ -1,0 +1,15 @@
+2. Security
+Secrets in Plaintext: k8s/base/config/secret.yaml contains raw base64/plaintext credentials (JWT_SECRET, passwords). Storing plain secrets in a Git repository is a major security risk. Consider using Sealed Secrets, External Secrets Operator, or SOPS to encrypt secrets before committing them.
+Security Contexts: Your containers run as root by default. You should define a securityContext on your deployments to drop all privileges, run as a non-root user, and set the root filesystem to read-only (readOnlyRootFilesystem: true).
+Network Policies: Currently, any pod can communicate with any other pod. Implementing NetworkPolicy resources would enforce zero-trust, e.g., only allowing the proxy to talk to the web service, and only web/proxy to talk to postgres/redis.
+
+3. GitOps & Image Management
+The :latest Tag: Deployments like jklanica/ai-gatekeeper-web:latest use the latest tag. GitOps relies on deterministic, immutable states. Using :latest means the cluster state isn't strictly tied to a specific Git commit. You should use explicit versions or Git commit SHAs (e.g., ai-gatekeeper-web:v1.0.2 or ai-gatekeeper-web:a1b2c3d).
+Database Migrator Job: Standard Job resources (like your database-migrator) run to completion once. If you push new code and apply via Kustomize, the job won't run again because the job name remains the same. A common GitOps workaround is to use tools that attach a hash suffix to the Job name on change, or use ArgoCD/Flux hooks. Adding ttlSecondsAfterFinished would also help clean up old completed pods.
+
+4. Database Deployments
+Deployment Strategy for PVCs: postgres and redis are configured as Deployments with ReadWriteOnce PersistentVolumeClaims. The default Kubernetes deployment strategy is RollingUpdate. During an update, Kubernetes will try to start a new Postgres pod before terminating the old one. The new pod will hang indefinitely because the old pod is holding the ReadWriteOnce volume lock. You must set strategy.type: Recreate for these deployments.
+StatefulSets: For production databases, it's highly recommended to use StatefulSets rather than Deployments, or leverage managed database services (like AWS RDS) for better durability and automated backups.
+
+5. Ingress & Routing
+No TLS/HTTPS: k8s/base/ingress/ingress.yaml is missing a tls section. Traffic is unencrypted. You should integrate cert-manager to automatically provision Let's Encrypt certificates and enforce HTTPS.
