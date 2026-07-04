@@ -15,11 +15,11 @@ If you want to spin this cluster up on your local machine (e.g. Docker Desktop),
 ### 1. 🔐 Secrets Configuration
 Because this repository uses **Sealed Secrets**, the `sealed-secret.yaml` file in this repository is encrypted and permanently tied to a specific "Master Key" (private key) that resides in the cluster.
 
-If you ever completely wipe your cluster, that active master key is destroyed, and the cluster will generate a new one upon reboot. To ensure `sealed-secret.yaml` continues to work, you must restore the original master key from your backup **before** or during deployment.
+If you ever completely wipe your cluster, that active master key is destroyed, and the cluster will generate a new one upon reboot. To ensure `sealed-secret.yaml` continues to work, you must restore the original master key from your backup **before** deploying the rest of the cluster.
 
-1. First, deploy the cluster (this creates the required `sealed-secrets` namespace and boots the controller):
+1. First, deploy **only** the Sealed Secrets controller to create its namespace and CRDs:
    ```bash
-   kustomize build --enable-helm clusters/production | kubectl apply -f -
+   kustomize build --enable-helm infrastructure/security/sealed-secrets/base | kubectl apply -f -
    ```
 2. Locate your backed-up master key (e.g., `master-key.backup.yaml`). **Never commit this file to Git.**
 3. Apply the backup key to the cluster manually:
@@ -30,12 +30,11 @@ If you ever completely wipe your cluster, that active master key is destroyed, a
    ```bash
    kubectl rollout restart deployment -n sealed-secrets sealed-secrets
    ```
-5. *(Optional but recommended)* Run the cluster deploy command from step 1 one more time to ensure all secrets and resources resolve correctly with the new key.
 
 *(Note: If you are setting this up for the first time on a brand new project, you will need to generate a new secret from `secret.template.yaml`, encrypt it with `kubeseal`, and back up your cluster's new master key).*
 
 ### 2. 🚀 Deploy the Cluster
-If you haven't already deployed the Kustomize stack in the secrets step above, you can deploy the entire production stack manually:
+Now that the secrets controller is running with the correct master key, you can deploy the entire production stack:
 ```bash
 kustomize build --enable-helm clusters/production | kubectl apply -f -
 ```
