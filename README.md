@@ -13,27 +13,21 @@ This repository contains the Kubernetes infrastructure and deployment manifests 
 If you want to spin this cluster up on your local machine (e.g. Docker Desktop), follow these steps:
 
 ### 1. 🔐 Secrets Configuration
-Because this repository uses **Sealed Secrets**, the `sealed-secret.yaml` file currently in this repository is encrypted specifically for the author's cluster and **will not work on your machine**. 
+Because this repository uses **Sealed Secrets**, the `sealed-secret.yaml` file in this repository is encrypted and permanently tied to a specific "Master Key" (private key) that resides in the cluster.
 
-Before deploying, you must generate your own encrypted secrets:
+If you ever completely wipe your cluster, that active master key is destroyed, and the cluster will generate a new one upon reboot. To ensure `sealed-secret.yaml` continues to work, you must restore the original master key from your backup **before** or during deployment.
 
-1. Copy the secret template:
+1. Locate your backed-up master key (e.g., `master-key.backup.yaml`). **Never commit this file to Git.**
+2. Apply the backup key to the cluster manually:
    ```bash
-   cp apps/ai-gatekeeper/base/config/secret.template.yaml apps/ai-gatekeeper/base/config/my-secret.yaml
+   kubectl apply -f master-key.backup.yaml
    ```
-2. Open `my-secret.yaml` and fill in your actual passwords.
-3. Install the Sealed Secrets controller into your cluster (so you can get the public key):
+3. If the `sealed-secrets` controller was already running, you must restart it so it picks up the restored key:
    ```bash
-   kustomize build --enable-helm infrastructure/security/sealed-secrets/base | kubectl apply -f -
+   kubectl rollout restart deployment -n sealed-secrets sealed-secrets
    ```
-4. Encrypt your secret using the `kubeseal` CLI tool:
-   ```bash
-   kubeseal -f apps/ai-gatekeeper/base/config/my-secret.yaml -w apps/ai-gatekeeper/base/config/sealed-secret.yaml
-   ```
-5. **IMPORTANT:** Delete your plaintext secret so you don't accidentally commit it!
-   ```bash
-   rm apps/ai-gatekeeper/base/config/my-secret.yaml
-   ```
+
+*(Note: If you are setting this up for the first time on a brand new project, you will need to generate a new secret from `secret.template.yaml`, encrypt it with `kubeseal`, and back up your cluster's new master key).*
 
 ### 2. 🚀 Deploy the Cluster
 You can deploy the entire production stack manually:
