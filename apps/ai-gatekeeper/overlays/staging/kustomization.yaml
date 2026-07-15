@@ -4,4 +4,14 @@ kind: Kustomization
 namespace: ai-gatekeeper-staging
 
 resources:
-  - ../../base
+- ../../base
+images:
+- name: jklanica/ai-gatekeeper-migrator
+  newName: jklanica/ai-gatekeeper-migrator
+  newTag: f3a0c6d0
+- name: jklanica/ai-gatekeeper-proxy
+  newName: jklanica/ai-gatekeeper-proxy
+  newTag: f3a0c6d0
+- name: jklanica/ai-gatekeeper-web
+  newName: jklanica/ai-gatekeeper-web
+  newTag: f3a0c6d0
