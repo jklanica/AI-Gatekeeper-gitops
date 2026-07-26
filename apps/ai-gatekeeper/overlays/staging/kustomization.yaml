@@ -8,10 +8,10 @@ resources:
 images:
 - name: jklanica/ai-gatekeeper-migrator
   newName: jklanica/ai-gatekeeper-migrator
-  newTag: 6818f164
+  newTag: 2f5089b1
 - name: jklanica/ai-gatekeeper-proxy
   newName: jklanica/ai-gatekeeper-proxy
-  newTag: 6818f164
+  newTag: 2f5089b1
 - name: jklanica/ai-gatekeeper-web
   newName: jklanica/ai-gatekeeper-web
-  newTag: 6818f164
+  newTag: 2f5089b1
